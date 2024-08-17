@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script async src="https://cse.google.com/cse?cx=e37364fc2d08c4af5"></script>
+<div class="gcse-search"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var searchResults = document.querySelector('.gsc-results');
+    if (searchResults) {
+      searchResults.addEventListener('click', function(e) {
+        var target = e.target;
+        if (target.tagName === 'A' && target.href) {
+          window.open(target.href, '_blank');
+          e.preventDefault();
+        }
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>
