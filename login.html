@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+</head>
+<body>
+    <h2>Giriş Yap</h2>
+    <form id="loginForm">
+        <label for="username">Kullanıcı Adı:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        
+        <label for="password">Şifre:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <button type="submit">Giriş Yap</button>
+    </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // GitHub API'si aracılığıyla veriyi çekip doğrulama işlemi
+            fetch('https://api.github.com/repos/oyuncunettv/database/contents/database.json', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'token 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',
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const decodedContent = atob(data.content);
+                const jsonContent = JSON.parse(decodedContent);
+
+                // Kullanıcı adı ve şifre kontrolü
+                if (jsonContent[username] && jsonContent[username].password === password) {
+                    alert('Giriş başarılı!');
+                    // Başarılı giriş sonrası yönlendirme yapılabilir
+                } else {
+                    alert('Kullanıcı adı veya şifre yanlış.');
+                }
+            })
+            .catch(error => console.error('Hata:', error));
+        });
+    </script>
+</body>
+</html>
