@@ -8,9 +8,6 @@
 
 NetHub'un temel amacı, Türk dijital hizmetlerini oluşturmak ve geliştirmektir. Şirketimiz, aşağıdaki alanlarda hizmet sunarak hem bireysel hem de kurumsal müşterilerimizin dijital ihtiyaçlarını karşılamayı hedefler:
 
-- **Web Geliştirme**: Modern ve kullanıcı dostu web siteleri tasarımı ve geliştirilmesi.
-- **Mobil Uygulama Geliştirme**: Android ve iOS platformlarında yüksek performanslı mobil uygulamalar.
-- **Yazılım Çözümleri**: Kurumsal ihtiyaçlara yönelik özel yazılım ve sistem çözümleri.
 - **Dijital Pazarlama**: SEO, SEM, sosyal medya yönetimi ve diğer dijital pazarlama stratejileri.
 - **Danışmanlık Hizmetleri**: Dijital strateji ve teknolojik danışmanlık hizmetleri.
 - **Duygu Sömürüsüne Son Vermek**: Bazı Türk markaları ürün tanıtırken "%100 Türk yapımı" gibi ifadelerle milli duyguları sömürüyor. Biz ise sadece Türk markası olduğumuzu söylüyor ve duygu sömürüsü yapmıyoruz.
