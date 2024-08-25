@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Kayıt Ol</h2>
+    <form id="registerForm">
+        <label for="username">Kullanıcı Adı:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        
+        <label for="email">E-posta:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <label for="password">Şifre:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <label for="phone">Telefon Numarası (Opsiyonel):</label><br>
+        <input type="text" id="phone" name="phone"><br><br>
+        
+        <button type="submit">Kayıt Ol</button>
+    </form>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value || "Kullanıcı Telefon No Girmedi";
+
+            const userData = {
+                [username]: {
+                    email: email,
+                    password: password,
+                    phone: phone
+                }
+            };
+
+            // GitHub API'si aracılığıyla veriyi çekip güncelleme işlemi
+            fetch('https://api.github.com/repos/oyuncunettv/database/contents/database.json', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'token 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',
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const decodedContent = atob(data.content);
+                const jsonContent = JSON.parse(decodedContent);
+
+                // Yeni kullanıcı verisini mevcut JSON içeriğine ekle
+                Object.assign(jsonContent, userData);
+
+                const updatedContent = btoa(JSON.stringify(jsonContent, null, 2));
+
+                // Güncellenmiş içeriği GitHub'a geri yükle
+                fetch('https://api.github.com/repos/oyuncunettv/database/contents/database.json', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'token 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',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        message: `Add user ${username}`,
+                        content: updatedContent,
+                        sha: data.sha
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Kayıt başarılı!');
+                })
+                .catch(error => console.error('Hata:', error));
+            })
+            .catch(error => console.error('Hata:', error));
+        });
+    </script>
+</body>
+</html>
