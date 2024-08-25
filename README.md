@@ -23,11 +23,11 @@ NetHub'un temel amacı, Türk dijital hizmetlerini oluşturmak ve geliştirmekti
   - Arama Yapabilir
   - [Linki](https://oyuncunettv.github.io/nethub/nsearch.html)
 
--**NBrowser**
- -Geliştirilme Aşamasında Tarayıcı
- -Şimdilik Internet Explorer Kullanıyor İdare Edin
- -İstediğiniz Arama Motorunu Ekleyip Kullanabilirsiniz
- -[Linki](https://oyuncunettv.github.io/nethub/nbrowser.html)
+- **NBrowser**
+  -Geliştirilme Aşamasında Tarayıcı
+  -Şimdilik Internet Explorer Kullanıyor İdare Edin
+  -İstediğiniz Arama Motorunu Ekleyip Kullanabilirsiniz
+  -[Linki](https://oyuncunettv.github.io/nethub/nbrowser.html)
 
 ## İletişim
 
