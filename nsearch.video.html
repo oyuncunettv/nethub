@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NSearch Video</title>
-    <link rel="icon" href="logo.png" type="image/x-icon">
-    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,29 +27,63 @@
             width: 100%;
             height: 200px;
         }
+        .search-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin: 10px;
+        }
+        .search-button svg {
+            fill: #e8eaed;
+            width: 24px;
+            height: 24px;
+        }
+        .load-more-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .load-more-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div id="searchContainer">
         <h1>NSearch Video</h1>
         <input type="text" id="searchQuery" placeholder="Video ara...">
-        <button onclick="performSearch()">Ara</button>
+        <button class="search-button" onclick="performSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+            </svg>
+        </button>
         <div id="results"></div>
+        <button id="loadMoreYouTube" class="load-more-button" onclick="loadMoreYouTube()" style="display: none;">Daha Fazla Yükle (YouTube)</button>
+        <button id="loadMoreVimeo" class="load-more-button" onclick="loadMoreVimeo()" style="display: none;">Daha Fazla Yükle (Vimeo)</button>
     </div>
 
     <script>
+        let youtubePageToken = '';  // YouTube için sayfa token'ı
+        let vimeoPage = 1;          // Vimeo için sayfa numarası
+
         // YouTube API araması
         async function searchYouTube(query) {
             const apiKey = 'AIzaSyDK0buJgeTZQOVaA_Raaf9AJo5QGewKqIk'; // YouTube API anahtarınız
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=50&key=${apiKey}`);
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=10&pageToken=${youtubePageToken}&key=${apiKey}`);
             const data = await response.json();
+            youtubePageToken = data.nextPageToken || '';  // Sonraki sayfa token'ını al
             return data.items;
         }
 
         // Vimeo API araması
-        async function searchVimeo(query) {
+        async function searchVimeo(query, page) {
             const token = 'd38451fe9296f77af8f5bb348c4a842d'; // Vimeo erişim token'ınız
-            const response = await fetch(`https://api.vimeo.com/videos?query=${query}`, {
+            const response = await fetch(`https://api.vimeo.com/videos?query=${query}&page=${page}&per_page=10`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -67,10 +99,55 @@
                 alert('Lütfen bir anahtar kelime girin.');
                 return;
             }
+            // İlk başta her iki butonu gizle
+            document.getElementById('loadMoreYouTube').style.display = 'none';
+            document.getElementById('loadMoreVimeo').style.display = 'none';
+
             const youtubeResults = await searchYouTube(query);
-            const vimeoResults = await searchVimeo(query);
+            const vimeoResults = await searchVimeo(query, vimeoPage);
+            
             displayResults(youtubeResults, 'YouTube');
             displayResults(vimeoResults, 'Vimeo');
+            
+            // Eğer YouTube'da daha fazla sonuç varsa butonu göster
+            if (youtubePageToken) {
+                document.getElementById('loadMoreYouTube').style.display = 'block';
+            }
+            // Vimeo'da daha fazla sonuç varsa butonu göster
+            if (vimeoResults.length === 10) {
+                document.getElementById('loadMoreVimeo').style.display = 'block';
+            }
+        }
+
+        // YouTube için daha fazla video yükleme
+        async function loadMoreYouTube() {
+            const query = document.getElementById('searchQuery').value;
+            if (query.trim() === '') return;
+            const results = await searchYouTube(query);
+            displayResults(results, 'YouTube');
+            
+            // Eğer daha fazla sayfa varsa, butonun görünümünü ayarla
+            if (youtubePageToken) {
+                document.getElementById('loadMoreYouTube').style.display = 'block';
+            } else {
+                document.getElementById('loadMoreYouTube').style.display = 'none';
+            }
+        }
+
+        // Vimeo için daha fazla video yükleme
+        async function loadMoreVimeo() {
+            vimeoPage++;
+            const query = document.getElementById('searchQuery').value;
+            if (query.trim() === '') return;
+            const results = await searchVimeo(query, vimeoPage);
+            displayResults(results, 'Vimeo');
+
+            // Eğer 10 sonuç dönerse, daha fazla yükleme butonunu göster
+            if (results.length === 10) {
+                document.getElementById('loadMoreVimeo').style.display = 'block';
+            } else {
+                document.getElementById('loadMoreVimeo').style.display = 'none';
+            }
         }
 
         // Sonuçları ekrana yerleştirme
