@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSearch Video</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        #searchContainer {
+            margin-top: 20px;
+        }
+        #results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .video-item {
+            margin: 10px;
+            width: 300px;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="searchContainer">
+        <h1>NSearch Video</h1>
+        <input type="text" id="searchQuery" placeholder="Video ara...">
+        <button onclick="performSearch()">Ara</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Örnek YouTube API araması
+        async function searchYouTube(query) {
+            const apiKey = 'AIzaSyDK0buJgeTZQOVaA_Raaf9AJo5QGewKqIk'; // Buraya gerçek YouTube API anahtarını ekle
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&key=${apiKey}`);
+            const data = await response.json();
+            return data.items;
+        }
+
+        // Arama işlemi
+        async function performSearch() {
+            const query = document.getElementById('searchQuery').value;
+            if (query.trim() === '') {
+                alert('Lütfen bir anahtar kelime girin.');
+                return;
+            }
+            const results = await searchYouTube(query);
+            displayResults(results);
+        }
+
+        // Sonuçları ekrana yerleştirme
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            results.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `
+                    <h3>${video.snippet.title}</h3>
+                    <iframe src="https://www.youtube.com/embed/${video.id.videoId}" allowfullscreen></iframe>
+                `;
+                resultsDiv.appendChild(videoItem);
+            });
+        }
+    </script>
+</body>
+</html>
