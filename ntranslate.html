@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NTranslate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .container {
+      text-align: center;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #output {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>NTranslate</h1>
+    <p>Çevirmek istediğiniz metni yazın:</p>
+    <textarea id="inputText" placeholder="Metni buraya yazın..."></textarea>
+    <br>
+    <button onclick="translateText()"><svg xmlns="http://www.w3.org/2000/svg" height="96px" viewBox="0 -960 960 960" width="96px" fill="#e8eaed"><path d="m476-80 182-480h84L924-80h-84l-43-122H603L560-80h-84ZM160-200l-56-56 202-202q-35-35-63.5-80T190-640h84q20 39 40 68t48 58q33-33 68.5-92.5T484-720H40v-80h280v-80h80v80h280v80H564q-21 72-63 148t-83 116l96 98-30 82-122-125-202 201Zm468-72h144l-72-204-72 204Z"/></svg></button>
+    <div id="output"></div>
+  </div>
+  <script>
+    async function translateText() {
+  // Kullanıcının girdiği metni al
+  const text = document.getElementById("inputText").value;
+  
+  // Eğer metin boşsa kullanıcıyı uyar
+  if (!text) {
+    alert("Lütfen çevirmek istediğiniz metni yazın.");
+    return;
+  }
+
+  // LibreTranslate API'sine istek gönder
+  const response = await fetch("https://libretranslate.com/translate", {
+    method: "POST",
+    body: JSON.stringify({
+      q: text,
+      source: "auto", // Dili otomatik algıla
+      target: "tr",   // Türkçeye çevir
+      format: "text",
+      api_key: ""     // API anahtarı gerekmez
+    }),
+    headers: { "Content-Type": "application/json" }
+  });
+
+  // Gelen cevabı JSON formatında al
+  const data = await response.json();
+
+  // Sonucu sayfada göster
+  document.getElementById("output").textContent = data.translatedText;
+}
+  </script>
+
+</body>
+</html>
