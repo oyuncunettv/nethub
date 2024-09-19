@@ -43,4 +43,4 @@ NetHub ile dijital dünyada başarıya ulaşmak için bizimle iletişime geçin!
 
 ---
 
-NetHub | Türk Dijital Hizmetleri | [NetHub Web Sitesi](https://oyuncunettv.github.io/nethub/index.html)
+NetHub Studio TR | Türk Dijital Hizmetleri | [NetHub Web Sitesi](https://oyuncunettv.github.io/nethub/index.html)
