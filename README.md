@@ -26,11 +26,18 @@ NetHub'un temel amacı, Türk dijital hizmetlerini oluşturmak ve geliştirmekti
   - İstediğiniz Arama Motorunu Ekleyip Kullanabilirsiniz
   - [Linki](https://oyuncunettv.github.io/nethub/nbrowser.html)
 
+- **NSearch Video (NVideo)**
+  - Video Arama Hizmeti
+  - YouTube Ve Vimeo Videoları Arayabiliyor
+  - Videoları Sayfada İzletebilir
+  - [Linki](https://oyuncunettv.github.io/nethub/nsearch.video.html)
+
 ## İletişim
 
 Bize ulaşmak için aşağıdaki iletişim bilgilerini kullanabilirsiniz:
 
-- **E-posta**: oyuncunettv@yandex.com
+- **Yönetici E-posta**: oyuncunettv@yandex.com
+- **Stüdyo E-posta**: nethubstudiotr@gmail.com
 
 NetHub ile dijital dünyada başarıya ulaşmak için bizimle iletişime geçin!
 
