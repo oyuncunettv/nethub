@@ -53,6 +53,19 @@
         .load-more-button:hover {
             background-color: #0056b3;
         }
+        #loadingIndicator {
+            display: none;
+            font-size: 20px;
+            color: #007bff;
+        }
+        @media (max-width: 600px) {
+            .video-item {
+                width: 100%;
+            }
+            iframe {
+                height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -64,6 +77,7 @@
                 <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
             </svg>
         </button>
+        <div id="loadingIndicator">Yükleniyor...</div> <!-- Yükleniyor göstergesi -->
         <div id="results"></div>
         <button id="loadMoreYouTube" class="load-more-button" onclick="loadMoreYouTube()" style="display: none;">Daha Fazla Yükle (YouTube)</button>
         <button id="loadMoreVimeo" class="load-more-button" onclick="loadMoreVimeo()" style="display: none;">Daha Fazla Yükle (Vimeo)</button>
@@ -101,6 +115,11 @@
                 alert('Lütfen bir anahtar kelime girin.');
                 return;
             }
+
+            // Aramadan önce eski sonuçları temizle
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('loadingIndicator').style.display = 'block';  // Yükleniyor göstergesini aç
+
             // İlk başta her iki butonu gizle
             document.getElementById('loadMoreYouTube').style.display = 'none';
             document.getElementById('loadMoreVimeo').style.display = 'none';
@@ -110,6 +129,8 @@
             
             displayResults(youtubeResults, 'YouTube');
             displayResults(vimeoResults, 'Vimeo');
+
+            document.getElementById('loadingIndicator').style.display = 'none';  // Yükleniyor göstergesini kapat
             
             // Eğer YouTube'da daha fazla sonuç varsa butonu göster
             if (youtubePageToken) {
