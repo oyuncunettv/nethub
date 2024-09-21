@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NNews - Türkiye ve Dünyadan Haberler</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .news-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .news-item {
+            background: white;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            width: 80%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls input, .controls select {
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>NNews - Türkiye ve Dünyadan Haberler</h1>
+<div class="controls">
+    <input type="text" id="search" placeholder="Arama yap...">
+    <select id="country">
+        <option value="tr">Türkiye - Türkiye</option>
+        <option value="az">Azerbaycan - Azərbaycan</option>
+        <option value="kz">Kazakistan - Қазақстан</option>
+        <option value="uz">Özbekistan - O'zbekiston</option>
+        <option value="tm">Türkmenistan - Türkmenistan</option>
+        <option value="kg">Kırgızistan - Кыргызстан</option>
+        <option value="hu">Macaristan - Magyarország</option>
+        <option value="ru">Rusya - Россия</option>
+        <option value="by">Belarus - Беларусь</option>
+        <option value="LHC">Lugansk Halk Cumhuriyeti - Луганская Народная Республика</option>
+        <option value="DHC">Donetsk Halk Cumhuriyeti - Донецкая Народная Республика</option>
+        <option value="us">Amerika - the USA</option>
+        <option value="fr">Fransa - France</option>
+        <option value="de">Almanya - Deutschland</option>
+        <option value="gb">İngiltere - England</option>
+        <option value="ch">İsviçre - Schweiz</option>
+        <option value="cn">Çin Halk Cumhuriyeti - 中華人民共和國</option>
+        <option value="ua">Ukrayna - українська</option>
+        <option value="il">İsrail - יִשְׂרָאֵל</option>
+        <option value="ps">Filistin - فلسطين</option>
+    </select>
+    <button id="fetch-button">Haberleri Getir</button>
+</div>
+<div class="news-container" id="news-container">
+    <p>Haberler yükleniyor...</p>
+</div>
+
+<script>
+    const newsContainer = document.getElementById('news-container');
+
+    const fetchNewsAPI = (country, query) => {
+        const apiKey = '56da85190e2244f2af0ba1006946c5a6';
+        const url = `https://newsapi.org/v2/top-headlines?country=${country}&q=${query}&apiKey=${apiKey}`;
+        return fetch(url).then(response => response.json());
+    };
+
+    const fetchGNewsAPI = (country, query) => {
+        const apiKey = 'd270f8e310c6f4d4d4a422b6c3cebcf4';
+        const url = `https://gnews.io/api/v4/top-headlines?country=${country}&q=${query}&token=${apiKey}`;
+        return fetch(url).then(response => response.json());
+    };
+
+    const fetchCurrentsAPI = (query) => {
+        const apiKey = '4fMnt58svKW4AiTrvVPivpbmrlTu53bgoeBdFv2e6uWeEtDI';
+        const url = `https://api.currentsapi.services/v1/latest-news?language=tr&keywords=${query}&apiKey=${apiKey}`;
+        return fetch(url).then(response => response.json());
+    };
+
+    const displayArticles = (articles) => {
+        newsContainer.innerHTML = '';
+        if (!articles.length) {
+            newsContainer.innerHTML = '<p>Haber bulunamadı.</p>';
+            return;
+        }
+        articles.forEach(article => {
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item';
+            newsItem.innerHTML = `
+                <h2>${article.title}</h2>
+                <p>${article.description || ''}</p>
+                <a href="${article.url}" target="_blank">Devamını oku</a>
+            `;
+            newsContainer.appendChild(newsItem);
+        });
+    };
+
+    const fetchAllNews = async () => {
+        const country = document.getElementById('country').value;
+        const query = document.getElementById('search').value;
+
+        try {
+            const newsResults = await Promise.allSettled([
+                fetchNewsAPI(country, query),
+                fetchGNewsAPI(country, query),
+                fetchCurrentsAPI(query)
+            ]);
+
+            const articles = [];
+            newsResults.forEach(result => {
+                if (result.status === 'fulfilled') {
+                    const data = result.value;
+                    if (data.articles) {
+                        articles.push(...data.articles);
+                    }
+                    if (data.news) {
+                        articles.push(...data.news);
+                    }
+                }
+            });
+            displayArticles(articles);
+        } catch (error) {
+            console.error('Hata:', error);
+            newsContainer.innerHTML = '<p>Haberler yüklenemedi.</p>';
+        }
+    };
+
+    document.getElementById('fetch-button').addEventListener('click', fetchAllNews);
+
+    // İlk yükleme
+    fetchAllNews();
+</script>
+
+</body>
+</html>
